@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-navbar>
+  	<button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Sondage</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+	<h1>What is the question ?</h1>
+	
+	<ion-card>
+		<ion-card-header>
+			<h2>Previous answers:</h2>
+		</ion-card-header>
+		<ion-card-content>
+			<ion-list>
+				<ion-item>
+					Yes
+					<ion-badge [innerHtml]="getPercentageYes()" item-end></ion-badge>
+					<ion-badge [innerHtml]="getCompteurYes()" item-end color="light"></ion-badge>
+				</ion-item>
+				<ion-item>
+					No
+					<ion-badge [innerHtml]="getPercentageNo()" item-end></ion-badge>
+					<ion-badge [innerHtml] = "getCompteurNo()" item-end color="light"></ion-badge>
+				</ion-item>
+				<ion-item>
+					Total
+					<ion-badge [innerHtml]="getPercentageTotal()" item-end></ion-badge>
+					<ion-badge [innerHtml] = "getCompteurTotal()" item-end color="light"></ion-badge>
+				</ion-item>
+			</ion-list>
+		</ion-card-content>
+	</ion-card>
+
+	<ion-card>
+		<ion-card-header>
+			<h2>Answer the question: </h2>
+		</ion-card-header>
+		<ion-card-content>
+			<ion-list>
+				<button ion-button *ngFor="let option of options" block 
+				(click)="itemTapped($event, option)">
+					{{option.title}}
+				</button>
+			</ion-list>
+		</ion-card-content>
+	</ion-card>
+
+</ion-content>
