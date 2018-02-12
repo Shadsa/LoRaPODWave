@@ -1,0 +1,24 @@
+Note G:
+    - Sous Windows, installer cordova et (surtout) ionic en global, sinon ionic n'est pas detecté.
+
+
+Pour crée un TP : (Cordova)
+
+    - taper la commande .\"node_modules\.bin\cordova.cmd" create NomDuTP com.RICM.NomDuTP NomDuTP
+    - Sous linux, sans backslash, sans guillemet et sans cmd (je pense)
+    - Ensuite, moove dans le repertoire crée et taper .\"..\node_modules\.bin\cordova.cmd" platform add android
+    - Pour le reste : taper .\"node_modules\.bin\cordova.cmd" help
+
+    (Ionic)
+    - Tapé la commande ionic start NomDuTP blank --type ionic1
+    - ensuite :  ionic cordova platform add android (en se placant dans le dossier TP)
+    - et tester l'install avec : ionic cordova build ios | ionic cordova emulate ios
+    - pour lancer : ionic serve --lab
+
+
+
+
+Erreur rencontré :
+
+- l'erreur d'exec not found (Windows) = installer ionic en --g 
+- erreur de compilb ionic cordova (car pas droit de modif sur fichier) => mettre le fichier dans user/toi/.config en non-lecture seul (ptet bug unix aussi)
