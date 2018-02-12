@@ -63,6 +63,28 @@ void logo(){
   display.display();
 }
 
+void loraDataSend(){
+  display.clear();
+  display.setTextAlignment(TEXT_ALIGN_LEFT);
+  display.setFont(ArialMT_Plain_10);
+  
+  display.drawString(0, 0, "Sending packet: ");
+  display.drawString(90, 0, String(counter));
+  display.display();
+
+  // send packet
+  LoRa.beginPacket();
+  LoRa.print("hello ");
+  LoRa.print(counter);
+  LoRa.endPacket();
+
+  counter++;
+  digitalWrite(25, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(1000);                       // wait for a second
+  digitalWrite(25, LOW);    // turn the LED off by making the voltage LOW
+  delay(1000);                       // wait for a second
+}
+
 void loraDataReceived(){
   display.clear();
   display.setTextAlignment(TEXT_ALIGN_LEFT);
@@ -111,7 +133,7 @@ void LoRaSetup()
   delay(1000);
   //ONLY LORA RECEIVER ?
   LoRa.onReceive(cbk);
-  //LoRa.receive(); => take it away, block the code
+  LoRa.receive(); //=> take it away, block the code
 }
 
 void setup()
@@ -137,15 +159,26 @@ int value = 0;
 
 void loop(){
  WiFiClient client = server.available();
+ char c;
   if (client) {
 
     if (client.connected()) {
       Serial.println("Connected to client");
-      char c = client.read();             // read a byte, then
-      Serial.write(c);                    // print it out the serial monitor
+      char c;
+      do{
+        c = client.read();
+        Serial.write(c);
+      }while(c != '\r');
+      client.println("HTTP/1.1 200 OK");
+      client.println("Content-type:text/html");
+      client.println();     
     }
 
     // close the connection:
-    client.stop();
+   // client.stop();
   }
+
+  // Parse the LoRa income and display
+
+  //Send LoRa Output.
 }
