@@ -29,7 +29,7 @@ ported for sparkfun esp32
 #include <SPI.h>
 #include <LoRa.h>
 #include <Wire.h>
-#include "SSD1306.h"
+#include "SSD1306.h" 
 #include "images.h"
 
 
@@ -52,7 +52,7 @@ String rssi = "RSSI --";
 String packSize = "--";
 String packet ;
 
-const char* ssid     = "LoRa-Wave POD";
+const char* ssid     = "OnePwet 5";
 const char* password = "1234567890";
 
 WiFiServer server(80);
@@ -61,7 +61,7 @@ void logo(){
   display.clear();
   display.drawXbm(0,5,logo_width,logo_height,logo_bits);
   display.display();
-} 
+}
 
 void loraDataReceived(){
   display.clear();
@@ -81,7 +81,7 @@ void cbk(int packetSize) {
   loraDataReceived();
 }
 
-void LoraSetup()
+void LoRaSetup()
 {
   pinMode(16,OUTPUT);
   pinMode(25,OUTPUT);
@@ -110,35 +110,8 @@ void LoraSetup()
   display.display();
   delay(1000);
   //ONLY LORA RECEIVER ?
-  //LoRa.onReceive(cbk);
-  //LoRa.receive();
-}
-void LoraListen(){
-  int packetSize = LoRa.parsePacket();
-  if (packetSize) { cbk(packetSize);  }
-  delay(10);
-}
-
-void LoraSend(){
-  display.clear();
-  display.setTextAlignment(TEXT_ALIGN_LEFT);
-  display.setFont(ArialMT_Plain_10);
-  
-  display.drawString(0, 0, "Sending packet: ");
-  display.drawString(90, 0, String(counter));
-  display.display();
-
-  // send packet
-  LoRa.beginPacket();
-  LoRa.print("hello ");
-  LoRa.print(counter);
-  LoRa.endPacket();
-
-  counter++;
-  digitalWrite(25, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(1000);                       // wait for a second
-  digitalWrite(25, LOW);    // turn the LED off by making the voltage LOW
-  delay(1000);
+  LoRa.onReceive(cbk);
+  LoRa.receive();
 }
 
 void setup()
@@ -171,7 +144,7 @@ void setup()
     WiFi.printDiag(Serial);
     
     server.begin();
-
+    LoRaSetup();
 }
 
 int value = 0;
@@ -182,6 +155,8 @@ void loop(){
 
     if (client.connected()) {
       Serial.println("Connected to client");
+      char c = client.read();             // read a byte, then
+      Serial.write(c);                    // print it out the serial monitor
     }
 
     // close the connection:
