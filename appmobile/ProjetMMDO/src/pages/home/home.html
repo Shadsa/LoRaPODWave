@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-navbar color="danger">
+    <ion-title>
+      Best Apply Ever
+    </ion-title>
+  </ion-navbar>
+  <ion-searchbar
+  [(ngModel)]="searchInput"
+  (ionInput)="onInput()"
+  >
+
+  </ion-searchbar>
+</ion-header>
+
+<ion-content padding>
+    {{result_empty}}
+  <ion-list>
+      
+      
+    <button ion-item [navPush]="aboutDetails" [navParams]="item"  *ngFor="let item of results | async">        
+      <img width="40" height="40" [src]="'https://image.tmdb.org/t/p/w92' + item.poster_path">
+      {{item.title}}
+      {{item.status}}
+    </button>  
+  </ion-list>
+</ion-content>

@@ -1,0 +1,17 @@
+{
+  "name": "androidcordovasetup",
+  "version": "1.0.0",
+  "description": "Basic setup for Cordova dev, TP purpose",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "angular": "^1.6.6",
+    "cordova": "^7.1.0",
+    "gradle": "^1.0.8",
+    "ionic": "^3.18.0"
+  }
+}
