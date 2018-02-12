@@ -111,7 +111,7 @@ void LoRaSetup()
   delay(1000);
   //ONLY LORA RECEIVER ?
   LoRa.onReceive(cbk);
-  LoRa.receive();
+  //LoRa.receive(); => take it away, block the code
 }
 
 void setup()
@@ -120,21 +120,7 @@ void setup()
     pinMode(5, OUTPUT);      // set the LED pin mode
 
     delay(10);
-
-    // We start by connecting to a WiFi network
-
-    //Serial.println();
-    //Serial.println();
-    //Serial.print("Connecting to ");
-    //Serial.println(ssid);
-
-    //WiFi.begin(ssid, password);
-
-   // while (WiFi.status() != WL_CONNECTED) {
-        //delay(500);
-       // Serial.print(".");
-   // }
-   WiFi.mode(WIFI_AP);
+    WiFi.mode(WIFI_AP);
        
     Serial.println(WiFi.softAP(ssid));       
     Serial.println("");
