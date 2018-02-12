@@ -168,12 +168,12 @@ void loop(){
       do{
         c = client.read();
         Serial.write(c);
-      }while(c != '\r');
-      if (currentLine.length() == 0) {
+      }while(c != '\n');
+     
       client.println("HTTP/1.1 200 OK");
       client.println("Content-type:text/html");
       client.println();  
-      }   
+       
     }
 
     // close the connection:
