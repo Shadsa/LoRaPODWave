@@ -44,6 +44,7 @@ ported for sparkfun esp32
 
 #define BAND    433E6  //you can set band here directly,e.g. 868E6,915E6
 #define PABOOST true
+#define MAXVALUE 20
 
 unsigned int counter = 0;
 
@@ -54,6 +55,7 @@ String packet ;
 
 const char* ssid     = "OnePwet 5";
 const char* password = "1234567890";
+const char* valueTable[MAXVALUE];
 
 WiFiServer server(80);
 
@@ -153,6 +155,11 @@ void setup()
     
     server.begin();
     LoRaSetup();
+
+    //Test setup for value array
+    for(int i=0;i<MAXVALUE;i++){
+      valueTable[i] = "test";
+    }
 }
 
 int value = 0;
@@ -161,21 +168,25 @@ void loop(){
  WiFiClient client = server.available();
  char c;
   if (client) {
-
+    String currentLine = "";
     if (client.connected()) {
       Serial.println("Connected to client");
       char c;
       do{
         c = client.read();
+        if(c!='\r'){
+          currentLine+=c;
+        }        
         Serial.write(c);
       }while(c != '\n');
-     
+      Serial.println(currentLine);
       client.println("HTTP/1.1 200 OK");
       client.println("Content-type:text/html");
       client.println();  
        
-    }
 
+    }
+    //Yolo
     // close the connection:
    // client.stop();
   }
