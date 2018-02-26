@@ -57,9 +57,13 @@ const char* ssid     = "OnePwet 5";
 const char* password = "1234567890";
 const char* valueTable[MAXVALUE];
 
+byte msgCount = 0;            // count of outgoing messages
+long lastSendTime = 0;        // last send time
+int interval = 2000; 
+
 WiFiServer server(80);
 
-void logo(){
+void logo(){   
   display.clear();
   display.drawXbm(0,5,logo_width,logo_height,logo_bits);
   display.display();
@@ -96,7 +100,11 @@ void loraDataReceived(){
   display.drawString(0, 0, rssi);  
   display.display();
 }
-
+void loraReceive() {
+  int packetSize = LoRa.parsePacket();
+  if (packetSize) { cbk(packetSize);  }
+  delay(10);
+}
 void cbk(int packetSize) {
   packet ="";
   packSize = String(packetSize,DEC);
@@ -132,9 +140,11 @@ void LoRaSetup()
   }
   display.drawString(0, 0, "LoRa Initial success!");
   display.display();
+  display.drawString(0, 10, "Wait for incomm data...");
+  display.display();
   delay(1000);
   //ONLY LORA RECEIVER ?
-  LoRa.onReceive(cbk);
+  //LoRa.onReceive(cbk);
   LoRa.receive(); //=> take it away, block the code
 }
 
@@ -191,6 +201,9 @@ void loop(){
    // client.stop();
   }
 
+  //loraDataSend();
+  loraReceive();
+  
   // Parse the LoRa income and display
 
   //Send LoRa Output.
