@@ -1,4 +1,4 @@
-/*
+ /*
  WiFi Web Server LED Blink
 
  A simple web server that lets you blink an LED via the web.
@@ -31,6 +31,7 @@ ported for sparkfun esp32
 #include <Wire.h>
 #include "SSD1306.h"
 #include "images.h"
+//#include "webpage.h"
 
 // Pin definetion of WIFI LoRa 32
 // HelTec AutoMation 2017 support@heltec.cn
@@ -55,9 +56,12 @@ String packet;
 const char *ssid = "LoRaPOD Wave 1.0";
 const char *password = "1234567890";
 const char *valueTable[MAXVALUE];
+int tableValueIndic=0;
 
 WiFiServer server(80);
-
+///////////////////////////////////////////////////////
+//Primitive for Lora manipulation and Harddware stuff//
+///////////////////////////////////////////////////////
 void logo()
 {
   display.clear();
@@ -110,6 +114,20 @@ void cbk(int packetSize)
   rssi = "RSSI " + String(LoRa.packetRssi(), DEC);
   loraDataReceived();
 }
+/////////////////////////////////
+//Setup for WIFI and LORA stuff//
+/////////////////////////////////
+void wifiSetup(){
+   WiFi.mode(WIFI_AP);
+  Serial.println(WiFi.softAP(ssid));
+  Serial.println("");
+  Serial.println("WiFi connected.");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+  WiFi.printDiag(Serial);
+
+  server.begin();
+}
 
 void LoRaSetup()
 {
@@ -145,32 +163,40 @@ void LoRaSetup()
   LoRa.receive();
 }
 
+////////////////////////////////////////////////
+//Setup for Data struct and Data manipulation//
+///////////////////////////////////////////////
+
+void initValueTable(){
+  for(int i=0;i<MAXVALUE;i++){
+    valueTable[i]="null";
+  }
+}
+
+void addValue(char* value){
+//todo
+}
+
+void deleteValue(int index){
+//todo
+}
+
+////////////////////////////////////
+//Initialisation and loop control//
+///////////////////////////////////
+
 void setup()
 {
   Serial.begin(115200);
   pinMode(5, OUTPUT); // set the LED pin mode
 
   delay(10);
-  WiFi.mode(WIFI_AP);
-
-  Serial.println(WiFi.softAP(ssid));
-  Serial.println("");
-  Serial.println("WiFi connected.");
-  Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());
-  WiFi.printDiag(Serial);
-
-  server.begin();
+  wifiSetup();
   LoRaSetup();
 
-  //Test setup for value array
-  for (int i = 0; i < MAXVALUE; i++)
-  {
-    valueTable[i] = "test";
-  }
+  
 }
 
-int value = 0;
 
 void loop()
 {
@@ -192,6 +218,7 @@ void loop()
           // that's the end of the client HTTP request, so send a response:
           if (currentLine.length() == 0)
           {
+            
             // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
             // and a content-type so the client knows what's coming, then a blank line:
             client.println("HTTP/1.1 200 OK");
@@ -205,6 +232,7 @@ void loop()
             // The HTTP response ends with another blank line:
             client.println();
             // break out of the while loop:
+           
             break;
           }
           else
@@ -226,39 +254,32 @@ void loop()
         {
           digitalWrite(5, LOW); // GET /L turns the LED off
         }
+        if (currentLine.endsWith("GET /GetPODMeta"))
+        {
+          digitalWrite(5, LOW); // GET /L turns the LED off
+        }
+        if (currentLine.endsWith("GET /GetPODData"))
+        {
+          digitalWrite(5, LOW); // GET /L turns the LED off
+        }
+        if (currentLine.endsWith("GET /GetPODResult"))
+        {
+          digitalWrite(5, LOW); // GET /L turns the LED off
+        }
+        if (currentLine.endsWith("GET /SendPODData"))
+        {
+          digitalWrite(5, LOW); // GET /L turns the LED off
+        }
+        if (currentLine.endsWith("GET /UpdatePODParameter"))
+        {
+          digitalWrite(5, LOW); // GET /L turns the LED off
+        }
       }
     }
     // close the connection:
     client.stop();
     Serial.println("Client Disconnected.");
-    /*
-    WiFiClient client = server.available();
-    char c;
-    if (client)
-    {
-      String currentLine = "";
-      if (client.connected())
-      {
-        Serial.println("Connected to client");
-        char c;
-        do
-        {
-          c = client.read();
-          if (c != '\r')
-          {
-            currentLine += c;
-          }
-          Serial.write(c);
-        } while (c != '\n');
-        Serial.println(currentLine);
-        client.println("HTTP/1.1 200 OK");
-        client.println("Content-type:text/html");
-        client.println();
-      }
-      //Yolo
-      // close the connection:
-      // client.stop();
-    }
+    
 
     // Parse the LoRa income and display
 
