@@ -5,6 +5,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from '../pages/home/home';
 import { SondagePage } from '../pages/sondage/sondage';
+import {SondageAnswersPage} from '../pages/sondage-answers/sondage-answers';
+import {SondageQuestionPage} from '../pages/sondage-question/sondage-question';
 
 @Component({
   templateUrl: 'app.html'

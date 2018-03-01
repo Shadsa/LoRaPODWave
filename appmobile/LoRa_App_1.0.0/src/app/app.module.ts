@@ -8,12 +8,16 @@ import {HttpClientModule} from '@angular/common/http';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { SondagePage } from '../pages/sondage/sondage';
+import {SondageAnswersPage} from '../pages/sondage-answers/sondage-answers';
+import {SondageQuestionPage} from '../pages/sondage-question/sondage-question';
 
 @NgModule({
   declarations: [ 
     MyApp,
     HomePage,
-    SondagePage
+    SondagePage,
+    SondageAnswersPage,
+    SondageQuestionPage
   ],
   imports: [
     BrowserModule,
@@ -24,7 +28,9 @@ import { SondagePage } from '../pages/sondage/sondage';
   entryComponents: [
     MyApp,
     HomePage,
-    SondagePage
+    SondagePage,
+    SondageAnswersPage,
+    SondageQuestionPage
   ],
   providers: [
     StatusBar,
