@@ -38,3 +38,5 @@ node_modules
 Réseaux/Tchat/ServerMain
 
 System/ProdCons_architecture/ProdCons/\.classpath
+
+.vscode/*
