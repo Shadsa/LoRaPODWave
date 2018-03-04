@@ -1,6 +1,7 @@
 import { Component,Injectable } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
@@ -13,29 +14,36 @@ interface Post {
   body: string;
 }
 
+interface Result {
+  name: string;
+  id: number;
+}
+
+const apikey = "c05e3eac979316742e075ef4ce54031a";
+
 @Component({
   selector: 'page-sondage-question',
   templateUrl: 'sondage-question.html',
 })
 export class SondageQuestionPage {
 
-  listPosts :Observable<Post[]>;
-  unestring :Observable<String>;
+  retTMDB : Result[] = [];
+
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
   public httpC: HttpClient) {
-      this.listPosts = this.httpC.get('https://jsonplaceholder.typicode.com/posts')
-      .pluck('results');
+    this.setList();
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SondageQuestionPage');
   }
 
-  public getPost() : Observable<Post[]> {
-    var ret: Observable<Post[]>;
-    ret = this.httpC.get('https://jsonplaceholder.typicode.com/posts')
-    .pluck('results');
-    return ret;
+  setList(){
+    this.getInfos().subscribe( res => this.retTMDB = res);
+  }
+
+  getInfos() : Observable<Result[]>{
+    return this.httpC.get<Result[]>("https://jsonplaceholder.typicode.com/users");
   }
 }

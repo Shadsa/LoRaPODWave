@@ -8,13 +8,14 @@
 
 
 <ion-content padding>
-  <ion-list>
+  <button ion-item block (click)="setList()">
     hello
-    <button ion-item *ngFor="let post of (listPost | async)">
-      <h1>{{ post.userId }}</h1>
+  </button>
+  <ion-list>
+    <button ion-item *ngFor="let post of retTMDB ">
+      <h1>{{ post.name }}</h1>
       <h1>{{ post.id }}</h1>
-      <h1>{{ post.title }}</h1>
-
+      
     </button>
   </ion-list>
 </ion-content>
