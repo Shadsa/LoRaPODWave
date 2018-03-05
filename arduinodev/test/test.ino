@@ -24,14 +24,16 @@ ported for sparkfun esp32
 31.01.2017 by Jan Hendrik Berlin
  
  */
-
+#ifndef GLOBALDEF
 #include <WiFi.h>
 #include <SPI.h>
 #include <LoRa.h>
 #include <Wire.h>
 #include "SSD1306.h"
 #include "images.h"
-//#include "webpage.h"
+#include "webpage.h"
+#endif
+
 
 // Pin definetion of WIFI LoRa 32
 // HelTec AutoMation 2017 support@heltec.cn
@@ -53,9 +55,9 @@ String rssi = "RSSI --";
 String packSize = "--";
 String packet;
 
-const char *ssid = "LoRaPOD Wave 1.0";
-const char *password = "1234567890";
-const char *valueTable[MAXVALUE];
+const char* ssid = "LoRaPOD Wave 1.0";
+const char* password = "1234567890";
+String valueTable[MAXVALUE];
 int tableValueIndic=0;
 
 WiFiServer server(80);
@@ -173,7 +175,13 @@ void initValueTable(){
   }
 }
 
-void addValue(char* value){
+void initValueTableTESTJSONFUNCTION(){
+  for(int i=0;i<MAXVALUE;i++){
+    valueTable[i]=""+i;
+  }
+}
+
+void addValue(String value){
 //todo
 }
 
@@ -248,31 +256,34 @@ void loop()
         // Check to see if the client request was "GET /H" or "GET /L":
         if (currentLine.endsWith("GET /H"))
         {
-          digitalWrite(5, HIGH); // GET /H turns the LED on
+          
         }
         if (currentLine.endsWith("GET /L"))
         {
-          digitalWrite(5, LOW); // GET /L turns the LED off
+         
         }
         if (currentLine.endsWith("GET /GetPODMeta"))
         {
-          digitalWrite(5, LOW); // GET /L turns the LED off
+      
         }
         if (currentLine.endsWith("GET /GetPODData"))
         {
-          digitalWrite(5, LOW); // GET /L turns the LED off
+          Serial.println("DebugGetPod");
+          generateData(valueTable);
+          client.print(GetDataPage);
+
         }
         if (currentLine.endsWith("GET /GetPODResult"))
         {
-          digitalWrite(5, LOW); // GET /L turns the LED off
+          
         }
         if (currentLine.endsWith("GET /SendPODData"))
         {
-          digitalWrite(5, LOW); // GET /L turns the LED off
+          
         }
         if (currentLine.endsWith("GET /UpdatePODParameter"))
         {
-          digitalWrite(5, LOW); // GET /L turns the LED off
+          
         }
       }
     }
