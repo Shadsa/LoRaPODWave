@@ -17,14 +17,16 @@ void generateMeta(String meta){
     GetMetaPage = meta;
 }
 
-void generateData(String* data){
+void generateData(String data[], int tabsize){
     String json = "{\"title\" : \"DataCollection\", \"collection\" : [{";
     int i=0;
-    while(data[i]!="null"){
+    while(data[i]!="null" && i<tabsize){
         if(i!=0){
             json+=" , ";
         }
         json = json+"\""+i+"\" : \""+data[i]+"\"";
+        i++;
     }
     json+= "}]}";
+    GetDataPage = json;
 }

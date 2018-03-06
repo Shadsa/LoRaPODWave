@@ -177,7 +177,7 @@ void initValueTable(){
 
 void initValueTableTESTJSONFUNCTION(){
   for(int i=0;i<MAXVALUE;i++){
-    valueTable[i]=""+i;
+    valueTable[i]="STRONK";
   }
 }
 
@@ -201,11 +201,23 @@ void setup()
   delay(10);
   wifiSetup();
   LoRaSetup();
-
+  initValueTableTESTJSONFUNCTION();
+  Serial.println("Affichage de la table de donnée");
+  for(int i=0;i<MAXVALUE;i++){
+      Serial.println(valueTable[i]);
+  }
+  Serial.println("Sortit de la fonction init et entré dans la json");
+  json();
   
 }
 
 
+void json(){
+  //Serial.println("tentative du aprse json");
+  generateData(valueTable, MAXVALUE);
+  Serial.println(GetDataPage);
+  Serial.println("Sortit de la fonction json");
+}
 void loop()
 {
   WiFiClient client = server.available(); // listen for incoming clients
@@ -220,13 +232,14 @@ void loop()
         char c = client.read(); // read a byte, then
         Serial.write(c);        // print it out the serial monitor
         if (c == '\n')
-        { // if the byte is a newline character
+        { 
+          // if the byte is a newline character
 
           // if the current line is blank, you got two newline characters in a row.
           // that's the end of the client HTTP request, so send a response:
           if (currentLine.length() == 0)
           {
-            
+            /*
             // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
             // and a content-type so the client knows what's coming, then a blank line:
             client.println("HTTP/1.1 200 OK");
@@ -240,7 +253,7 @@ void loop()
             // The HTTP response ends with another blank line:
             client.println();
             // break out of the while loop:
-           
+           */
             break;
           }
           else
@@ -256,7 +269,7 @@ void loop()
         // Check to see if the client request was "GET /H" or "GET /L":
         if (currentLine.endsWith("GET /H"))
         {
-          
+          client.print("Click <a href=\"/L\">here</a> to turn the LED on pin 5 off.<br>");
         }
         if (currentLine.endsWith("GET /L"))
         {
@@ -269,8 +282,9 @@ void loop()
         if (currentLine.endsWith("GET /GetPODData"))
         {
           Serial.println("DebugGetPod");
-          generateData(valueTable);
-          client.print(GetDataPage);
+          client.print("Click <a href=\"/L\">here</a> to turn the GET POD DATA DEBUG<br>");
+          //generateData(valueTable);
+          //client.print(GetDataPage);
 
         }
         if (currentLine.endsWith("GET /GetPODResult"))
