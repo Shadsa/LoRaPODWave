@@ -57,7 +57,7 @@ const char* ssid     = "OnePwet 5";
 const char* password = "1234567890";
 const char* valueTable[MAXVALUE];
 
-byte msgCount = 0;            // count of outgoing messages
+
 long lastSendTime = 0;        // last send time
 int interval = 2000; 
 
@@ -202,6 +202,13 @@ void loop(){
   }
 
   //loraDataSend();
+    if (millis() - lastSendTime > interval)
+  {
+   
+    loraDataSend();
+    lastSendTime = millis();            // timestamp the message
+    interval = random(2000) + 1000;    // 2-3 seconds
+  }
   loraReceive();
   
   // Parse the LoRa income and display
