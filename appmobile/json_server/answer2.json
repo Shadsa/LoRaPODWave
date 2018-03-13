@@ -1,0 +1,26 @@
+{
+  "collection": [
+    {
+      "id": 1,
+      "value": "yes",
+      "num": 50
+    },
+    {
+      "id": 2,
+      "value": "no",
+      "num": 13
+    },
+    {
+      "id": 3,
+      "value": "beurk",
+      "num": 12
+    },
+    {
+      "id": 4,
+      "value": "maybe",
+      "num": 25
+    }
+  ],
+  "title": "Do you like potatoes ?",
+  "total": 100
+}

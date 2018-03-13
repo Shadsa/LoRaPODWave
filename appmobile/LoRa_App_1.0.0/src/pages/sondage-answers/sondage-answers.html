@@ -1,12 +1,40 @@
-<ion-header>
-
-  <ion-navbar>
-    <ion-title>sondageAnswers</ion-title>
-  </ion-navbar>
-
-</ion-header>
-
-
 <ion-content padding>
 
+    <ion-item *ngIf = "retResult">
+        <h2>{{ retResult.title}}</h2>
+    </ion-item>
+
+    <ion-card *ngIf = "retResult ; else loading">
+        <ion-card-header>
+            Previous answers:
+        </ion-card-header>
+        <ion-card-content>
+            <ion-list>
+                <ion-item *ngFor="let collec of retResult.collection" >
+                    {{collec.value}}
+
+                    <ion-badge item-end color="light" 
+                    [innerHtml]="convertPercentage(collec.num, retResult.total )"></ion-badge>
+
+                    <ion-badge item-end>{{collec.num}}</ion-badge>
+                </ion-item>
+            </ion-list>
+        </ion-card-content>
+        <ion-card-header>
+            Total
+            <ion-badge item-end>{{retResult.total}}</ion-badge>
+        </ion-card-header>
+    </ion-card>
+
+    <ng-template #loading>
+        <h4>page is loading</h4>
+    </ng-template>
+
+    <ion-fab right bottom>
+        <button ion-fab (click) = "setResult()">
+            <ion-icon name="refresh">
+
+            </ion-icon>
+        </button>
+    </ion-fab>
 </ion-content>

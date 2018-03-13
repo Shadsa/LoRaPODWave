@@ -1,0 +1,21 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>sondageQuestion</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <button ion-item block (click)="setList()">
+    hello
+  </button>
+  <ion-list>
+    <button ion-item *ngFor="let post of retTMDB ">
+      <h1>{{ post.name }}</h1>
+      <h1>{{ post.id }}</h1>
+      
+    </button>
+  </ion-list>
+</ion-content>

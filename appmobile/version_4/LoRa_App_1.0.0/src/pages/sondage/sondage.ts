@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-import { IonicApp } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
 
 import {SondageAnswersPage} from '../sondage-answers/sondage-answers';
@@ -10,26 +9,17 @@ import {SondageQuestionPage} from '../sondage-question/sondage-question';
   selector: 'page-sondage',
   templateUrl: 'sondage.html',
 })
-
 export class SondagePage {
 
-  pageAnswers : any;
-  pageQuestion : any;
-
-  constructor(public navCtrl: NavController, public navParams: NavParams, public httpc: HttpClient) {
-    this.pageAnswers = SondageAnswersPage;
-    this.pageQuestion = SondageQuestionPage;
+  constructor(public navCtrl: NavController, public navParams: NavParams,
+              public httpc: HttpClient) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SondagePage');
   }
 
-  gotoAnswers() {
-    this.navCtrl.push(SondageAnswersPage);
-  }
-
-  gotoQuestion() {
+  getData() {
     this.navCtrl.push(SondageQuestionPage);
   }
 
