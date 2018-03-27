@@ -1,4 +1,4 @@
- /*
+/*
  WiFi Web Server LED Blink
 
  A simple web server that lets you blink an LED via the web.
@@ -34,7 +34,6 @@ ported for sparkfun esp32
 #include "webpage.h"
 #endif
 
-
 // Pin definetion of WIFI LoRa 32
 // HelTec AutoMation 2017 support@heltec.cn
 #define SCK 5   // GPIO5  -- SX127x's SCK
@@ -55,10 +54,11 @@ String rssi = "RSSI --";
 String packSize = "--";
 String packet;
 
-const char* ssid = "LoRaPOD Wave 1.0";
-const char* password = "1234567890";
-String valueTable[MAXVALUE];
-int tableValueIndic=0;
+const char *ssid = "LoRaPOD Wave 1.0";
+const char *password = "1234567890";
+String metaTable[MAXVALUE][2]; //Title + contenu
+String valueTable[MAXVALUE];   //Options
+int resultTable[MAXVALUE];     //index of the options
 
 WiFiServer server(80);
 ///////////////////////////////////////////////////////
@@ -119,8 +119,9 @@ void cbk(int packetSize)
 /////////////////////////////////
 //Setup for WIFI and LORA stuff//
 /////////////////////////////////
-void wifiSetup(){
-   WiFi.mode(WIFI_AP);
+void wifiSetup()
+{
+  WiFi.mode(WIFI_AP);
   Serial.println(WiFi.softAP(ssid));
   Serial.println("");
   Serial.println("WiFi connected.");
@@ -169,24 +170,51 @@ void LoRaSetup()
 //Setup for Data struct and Data manipulation//
 ///////////////////////////////////////////////
 
-void initValueTable(){
-  for(int i=0;i<MAXVALUE;i++){
-    valueTable[i]="null";
+void initTables()
+{
+  for (int i = 0; i < MAXVALUE; i++)
+  {
+    valueTable[i] = "null";
+    resultTable[i] = 0;
+    metaTable[i][0]="null";
+    metaTable[i][1]="null";
   }
 }
 
-void initValueTableTESTJSONFUNCTION(){
-  for(int i=0;i<MAXVALUE;i++){
-    valueTable[i]="STRONK";
+void initTablesTESTFUNCTION()
+{
+  for (int i = 0; i < MAXVALUE; i++)
+  {
+    valueTable[i] = "value"+i;
+    resultTable[i] = 0;
+    metaTable[i][0]="ceci est la question, est la même pour tous dans le cas de l'exemple du sondage, peux servir à autre chose";
+    metaTable[i][1]="ceci est l'information lié à l'index"+i;
   }
 }
 
-void addValue(String value){
-//todo
+
+void addValue(String value)
+{
+  int i=0;
+  while(valueTable[i]!="null"){
+    i++;
+  }
+  valueTable[i]=value;
 }
 
-void deleteValue(int index){
-//todo
+void deleteValue(int index)
+{
+  //todo
+}
+
+void incrementResult(int index)
+{
+  resultTable[index] = resultTable[index] + 1;
+}
+
+void decrementResult(int index)
+{
+  resultTable[index] = resultTable[index] - 1;
 }
 
 ////////////////////////////////////
@@ -201,23 +229,9 @@ void setup()
   delay(10);
   wifiSetup();
   LoRaSetup();
-  initValueTableTESTJSONFUNCTION();
-  Serial.println("Affichage de la table de donnée");
-  for(int i=0;i<MAXVALUE;i++){
-      Serial.println(valueTable[i]);
-  }
-  Serial.println("Sortit de la fonction init et entré dans la json");
-  json();
-  
+  initTablesTESTFUNCTION();
 }
 
-
-void json(){
-  //Serial.println("tentative du aprse json");
-  generateData(valueTable, MAXVALUE);
-  Serial.println(GetDataPage);
-  Serial.println("Sortit de la fonction json");
-}
 void loop()
 {
   WiFiClient client = server.available(); // listen for incoming clients
@@ -232,7 +246,7 @@ void loop()
         char c = client.read(); // read a byte, then
         Serial.write(c);        // print it out the serial monitor
         if (c == '\n')
-        { 
+        {
           // if the byte is a newline character
 
           // if the current line is blank, you got two newline characters in a row.
@@ -254,6 +268,7 @@ void loop()
             client.println();
             // break out of the while loop:
            */
+            //client.println(mainPage);
             break;
           }
           else
@@ -266,47 +281,54 @@ void loop()
           currentLine += c; // add it to the end of the currentLine
         }
 
-        // Check to see if the client request was "GET /H" or "GET /L":
-        if (currentLine.endsWith("GET /H"))
-        {
-          client.print("Click <a href=\"/L\">here</a> to turn the LED on pin 5 off.<br>");
-        }
-        if (currentLine.endsWith("GET /L"))
-        {
-         
-        }
+        // Check differents roads of query
         if (currentLine.endsWith("GET /GetPODMeta"))
         {
-      
+          generateMeta(metaTable, MAXVALUE);
+          client.print(GetMetaPage);
         }
         if (currentLine.endsWith("GET /GetPODData"))
         {
-          Serial.println("DebugGetPod");
-          client.print("Click <a href=\"/L\">here</a> to turn the GET POD DATA DEBUG<br>");
-          //generateData(valueTable);
-          //client.print(GetDataPage);
-
+          generateData(valueTable, MAXVALUE);
+          client.print(GetDataPage);
         }
         if (currentLine.endsWith("GET /GetPODResult"))
         {
-          
+          generateData(resultTable, MAXVALUE);
+          client.print(GetDataPage);
         }
-        if (currentLine.endsWith("GET /SendPODData"))
-        {
-          
-        }
+
         if (currentLine.endsWith("GET /UpdatePODParameter"))
         {
-          
         }
+
+        //Loop handling the upvote and downvote
+        for (int i = 0; i < MAXVALUE; i++)
+        {
+          if (currentLine.endsWith("GET /UP_"+valueTable[i]))
+          {
+            incrementResult(i);
+            Serial.println("Increment result"+valueTable[i]);
+            client.print(Header+"Vote pris en compte !");
+          }else if(currentLine.endsWith("GET /DOWN_"+valueTable[i])){
+            decrementResult(i);
+            Serial.println("Decrement result"+valueTable[i]);
+            client.print(Header+"Vote pris en compte !");
+          }
+        }
+        
+
+        //Loop handling the incoming parameters for UpdatePODParameter
+
+
       }
     }
     // close the connection:
     client.stop();
     Serial.println("Client Disconnected.");
-    
 
     // Parse the LoRa income and display
+    
 
     //Send LoRa Output.*/
   }
