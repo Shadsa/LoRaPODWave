@@ -1,0 +1,20 @@
+1/	get/RESET_POD
+2/	get/SET_POD_ID/pod_id
+3/	get/SET_POD_META/pod_id/titre/detail
+4/	get/SET_POD_DATA/pod_id/nbOptions/option1/option2/.../optionN
+
+
+
+Feature WIP:
+	Paramétrage générique
+	->Envoi générique(RADIO)
+	Filtres Booleens		->DYN
+	Système de trigger		->DYN
+	
+
+Remarque
+	Tech vs Mat
+		|_>Librairie
+	
+
+	
