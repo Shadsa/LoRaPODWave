@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "functional": "cpp",
+        "memory": "cpp",
+        "random": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "utility": "cpp",
+        "xmemory0": "cpp",
+        "xstddef": "cpp",
+        "xtr1common": "cpp",
+        "xutility": "cpp",
+        "stack": "cpp",
+        "xlocale": "cpp"
+    }
+}

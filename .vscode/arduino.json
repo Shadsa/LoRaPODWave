@@ -1,0 +1,6 @@
+{
+    "board": "heltec:esp32:wifi_kit_32",
+    "configuration": "FlashFreq=80,UploadSpeed=921600",
+    "sketch": "arduinodev\\test\\test.ino",
+    "port": "COM3"
+}
