@@ -34,14 +34,14 @@ void generateData(String data[], int tabsize){
     GetDataPage = json;
 }
 
-void generateData(int data[], int tabsize){
+void generateData(int data[],String data2[], int tabsize){
     String json = Header+"{\"title\" : \"ResultCollection\", \"collection\" : [";
     int i=0;
     while(i<tabsize){
         if(i!=0){
             json+=" , ";
         }
-        json = json+"{\"id\" : \""+i+"\",\"value\" : \""+data[i]+"\"}";
+        json = json+"{\"id\" : \""+i+"\",\"value\" : \""+data2[i]+"\",\"num\" : \""+data[i]+"\"}";
         i++;
     }
     json+= "]}\n";

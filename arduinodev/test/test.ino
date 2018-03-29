@@ -54,11 +54,24 @@ String rssi = "RSSI --";
 String packSize = "--";
 String packet;
 
+
 const char *ssid = "LoRaPOD Wave 1.0";
 const char *password = "1234567890";
 String metaTable[MAXVALUE][2]; //Title + contenu
 String valueTable[MAXVALUE];   //Options
 int resultTable[MAXVALUE];     //index of the options
+
+/*
+  BOTH FOR RADIO TRIGGER (if condition then trigger)
+*/
+bool trigger = false;
+bool condition = false;
+
+/*
+  BOTH FOR IDENTIFICATION OF RADIO PACKET (one for POD (no infinite flooding), the other for application (no trash data))
+*/
+int PODID = 0;      //4 digit
+String appTag = ""; // "# 6 digit"
 
 WiFiServer server(80);
 ///////////////////////////////////////////////////////
@@ -176,8 +189,10 @@ void initTables()
   {
     valueTable[i] = "null";
     resultTable[i] = 0;
-    metaTable[i][0]="null";
-    metaTable[i][1]="null";
+    metaTable[i][0] = "null";
+    metaTable[i][1] = "null";
+    PODID = 0001;
+    appTag = "#000001";
   }
 }
 
@@ -185,21 +200,23 @@ void initTablesTESTFUNCTION()
 {
   for (int i = 0; i < MAXVALUE; i++)
   {
-    valueTable[i] = "value"+i;
+    valueTable[i] = "value" + i;
     resultTable[i] = 0;
-    metaTable[i][0]="ceci est la question, est la même pour tous dans le cas de l'exemple du sondage, peux servir à autre chose";
-    metaTable[i][1]="ceci est l'information lié à l'index"+i;
+    metaTable[i][0] = "ceci est la question, est la même pour tous dans le cas de l'exemple du sondage, peux servir à autre chose";
+    metaTable[i][1] = "ceci est l'information lié à l'index" + i;
+    PODID = 0001;
+    appTag = "#000001";
   }
 }
 
-
 void addValue(String value)
 {
-  int i=0;
-  while(valueTable[i]!="null"){
+  int i = 0;
+  while (valueTable[i] != "null")
+  {
     i++;
   }
-  valueTable[i]=value;
+  valueTable[i] = value;
 }
 
 void deleteValue(int index)
@@ -215,6 +232,65 @@ void incrementResult(int index)
 void decrementResult(int index)
 {
   resultTable[index] = resultTable[index] - 1;
+}
+
+/*
+This function should at least parse a string and, depending the input, select different bool filter.
+for the moment, it juste a stupid "When x votes are hits, then send"
+How to use : Stock the condition str in the condition variable, then when you want to check it 
+for exemple, after each income, just send conditionFunction(condition). If it's fullfill, then it will be send by
+calling the trigger function.
+*/
+bool conditionFunction(String str)
+{
+  bool res = false;
+  if (false)
+  {
+    //Implement other filter here by replacing this if by a str parsing
+  }
+  else
+  {
+    //stupid condition
+    for (int i = 0; i < MAXVALUE; i++)
+    {
+      if (resultTable[i] >= MAXVALUE)
+      {
+        res = true;
+      }
+    }
+  }
+  if (res)
+  {
+    triggerFunction(str);
+  }
+  return res;
+}
+
+/*
+It follow exactly the same idea than condition, the trigger will match the str selector, then 
+ it will send a value in Radio Mode.
+/!\ WARNING : This function implement the radio sending algorithm too, pay attention.
+*/
+void triggerFunction(String str)
+{
+  String radioPacket = "";
+  if (false)
+  {
+    //Implement other filter here by replacing this if by a str parsing
+  }
+  else
+  {
+    //stupid condition
+    int max = 0;
+    for (int i = 0; i < MAXVALUE; i++)
+    {
+      if (resultTable[i] >= MAXVALUE)
+      {
+        max = resultTable[i];
+      }
+    }
+  }
+  //Send RadioPacket
 }
 
 ////////////////////////////////////
@@ -294,13 +370,11 @@ void loop()
         }
         if (currentLine.endsWith("GET /GetPODResult"))
         {
-          generateData(resultTable, MAXVALUE);
+          generateData(resultTable, valueTable, MAXVALUE);
           client.print(GetDataPage);
         }
 
-        if (currentLine.endsWith("GET /UpdatePODParameter"))
-        {
-        }
+        //Loop handling the incoming parameters for UpdatePODParameter
 
         //Loop handling the upvote and downvote
         for (int i = 0; i < MAXVALUE; i++)
@@ -315,12 +389,8 @@ void loop()
             Serial.println("Decrement result"+valueTable[i]);
             client.print(Header+"Vote pris en compte !");
           }
-        }
+        }   
         
-
-        //Loop handling the incoming parameters for UpdatePODParameter
-
-
       }
     }
     // close the connection:
@@ -328,7 +398,6 @@ void loop()
     Serial.println("Client Disconnected.");
 
     // Parse the LoRa income and display
-    
 
     //Send LoRa Output.*/
   }
