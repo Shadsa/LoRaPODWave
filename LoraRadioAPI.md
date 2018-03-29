@@ -9,6 +9,6 @@ Envoyer une MaJ :
 
 SendLORAUpdate
 
-Recevoir une MaJ :
+    Recevoir une MaJ :
 
 ReceiveLORAUpdate
