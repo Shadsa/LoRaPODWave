@@ -147,7 +147,23 @@ void LoRaSetup()
   //LoRa.onReceive(cbk);
   LoRa.receive(); //=> take it away, block the code
 }
+void parse(char* data, int* podid, char* num, char* value){
+  char *result = NULL;
+  char *spl = "_";
+  result = strtok(data,spl);
 
+  *podid = atoi(result);
+
+  result = strtok(NULL,spl);
+  num=strcpy(num,result);
+
+
+  result = strtok(NULL,spl);
+  while(result!=NULL){
+  value=strcat(value,result);
+    result = strtok(NULL,spl);
+  }  
+}
 void setup()
 {
     Serial.begin(115200);
