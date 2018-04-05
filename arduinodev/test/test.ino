@@ -32,6 +32,7 @@ ported for sparkfun esp32
 #include "SSD1306.h"
 #include "images.h"
 #include "webpage.h"
+#include <EEPROM.h>
 #endif
 
 // Pin definetion of WIFI LoRa 32
@@ -299,6 +300,7 @@ void triggerFunction(String str)
 
 void setup()
 {
+  EEPROMClear();
   Serial.begin(115200);
   pinMode(5, OUTPUT); // set the LED pin mode
 
@@ -392,6 +394,8 @@ void loop()
         }   
         
       }
+
+      conditionFunction();
     }
     // close the connection:
     client.stop();
