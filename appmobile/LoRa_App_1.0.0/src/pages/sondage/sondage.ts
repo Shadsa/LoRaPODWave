@@ -11,6 +11,7 @@ import {SondageQuestionPage} from '../sondage-question/sondage-question';
   templateUrl: 'sondage.html',
 })
 
+//contains the 2 others pages
 export class SondagePage {
 
   pageAnswers : any;
@@ -25,6 +26,7 @@ export class SondagePage {
     console.log('ionViewDidLoad SondagePage');
   }
 
+  //the followings launch the appropriate pages
   gotoAnswers() {
     this.navCtrl.push(SondageAnswersPage);
   }
