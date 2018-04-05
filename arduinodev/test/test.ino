@@ -300,7 +300,6 @@ void triggerFunction(String str)
 
 void setup()
 {
-  EEPROMClear();
   Serial.begin(115200);
   pinMode(5, OUTPUT); // set the LED pin mode
 
@@ -395,7 +394,7 @@ void loop()
         
       }
 
-      conditionFunction();
+      conditionFunction("");
     }
     // close the connection:
     client.stop();
