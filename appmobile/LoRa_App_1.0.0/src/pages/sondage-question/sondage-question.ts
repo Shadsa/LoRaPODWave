@@ -16,6 +16,10 @@ interface Question_Result {
   collection : [Question_Collection];
 }
 
+interface Question_Meta {
+  
+}
+
 
 const httpOptions = {
   headers : new HttpHeaders({ 
@@ -33,11 +37,12 @@ export class SondageQuestionPage {
 
   uneUrl : string = "https://api.myjson.com/bins/q2gph";
   urlGet : string = "http://192.168.4.1/GetPODData";
-  urlPush : string = "http://192.168.4.1/GetPODData";
+  urlPush : string = "http://192.168.4.1/UP_";
 
 
   retResult : Question_Result = null;
-
+  tempResult : any = null;
+  
   constructor(public navCtrl: NavController, public navParams: NavParams,
   public httpC: HttpClient, public alertCtrl: AlertController) {
     this.setResult();
@@ -55,8 +60,14 @@ export class SondageQuestionPage {
     return this.httpC.get<Question_Result>(this.urlGet);
   }
 
-  sendResult() {//TODO
-    this.httpC.get<Question_Result>(this.urlGet);
+  temp(id) {
+    console.log("voted for :");
+    console.log(this.urlPush+id);
+    return this.httpC.get(this.urlPush+id);
+    
+  }
+  sendResult(id) {
+    this.temp(id).subscribe(res => this.tempResult = res);
   }
 
   buttonClicked(value, id){
@@ -75,6 +86,7 @@ export class SondageQuestionPage {
           text: 'Confirm',
           handler: () => {
             console.log('Confirm '+ id +' clicked');
+            this.sendResult(value);
           }
         }
       ]

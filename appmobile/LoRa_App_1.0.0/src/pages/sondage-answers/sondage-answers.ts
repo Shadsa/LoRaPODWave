@@ -25,7 +25,7 @@ interface Answers_Result {
 })
 
 export class SondageAnswersPage {
-  uneUrl : string = "https://api.myjson.com/bins/phhb1";
+  uneUrl : string = "http://192.168.4.1/GetPODResult";
   retResult : Answers_Result = null;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
